@@ -1,5 +1,5 @@
-using CodeBase.Infrastructure;
 using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.States;
 using UnityEngine;
 
 namespace CodeBase.Santa
@@ -14,7 +14,7 @@ namespace CodeBase.Santa
 
     private void Awake()
     {
-      _inputService = Game.InputService;
+      _inputService = BootstrapState.InputService;
     }
 
     private void Start()
