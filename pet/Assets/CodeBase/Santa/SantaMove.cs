@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace CodeBase.Santa
 {
+  [RequireComponent(typeof(CharacterController))]
   public class SantaMove : MonoBehaviour
   {
     [SerializeField] private CharacterController _characterController;
@@ -42,9 +43,7 @@ namespace CodeBase.Santa
       _characterController.Move(_movementSpeed * movementVector * Time.deltaTime);
     }
 
-    private void CameraFollow()
-    {
+    private void CameraFollow() => 
       _camera.GetComponent<CameraFollow>().Follow(gameObject);
-    }
   }
 }

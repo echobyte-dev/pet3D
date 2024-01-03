@@ -1,3 +1,4 @@
+using CodeBase.Infrastructure.Factories;
 using CodeBase.UI;
 using UnityEngine;
 
@@ -6,17 +7,19 @@ namespace CodeBase.Infrastructure.States
   public class LoadLevelState : IPlayloadState<string>
   {
     private const string InitialPointTag = "InitialPoint";
-    private const string PlayerPath = "Santa/Santa";
 
     private readonly GameStateMachine _stateMachine;
     private readonly SceneLoader _sceneLoader;
     private readonly LoadingCurtain _curtain;
+    private readonly IGameFactory _gameFactory;
 
-    public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain)
+    public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain,
+      IGameFactory gameFactory)
     {
       _stateMachine = stateMachine;
       _sceneLoader = sceneLoader;
       _curtain = curtain;
+      _gameFactory = gameFactory;
     }
 
     public void Enter(string sceneName)
@@ -30,8 +33,7 @@ namespace CodeBase.Infrastructure.States
 
     private void OnLoaded()
     {
-      GameObject initialPoint = GameObject.FindWithTag(InitialPointTag);
-      GameObject player = Instantiate(PlayerPath, at: initialPoint.transform.position);
+      GameObject player = _gameFactory.CreateSanta(GameObject.FindWithTag(InitialPointTag));
 
       CameraFollow(player);
 
@@ -43,17 +45,6 @@ namespace CodeBase.Infrastructure.States
       Camera.main
         .GetComponent<CameraFollow>()
         .Follow(player);
-    }
-
-    private static GameObject Instantiate(string path)
-    {
-      var prefab = Resources.Load<GameObject>(path);
-      return Object.Instantiate(prefab);
-    }
-    private static GameObject Instantiate(string path, Vector3 at)
-    {
-      var prefab = Resources.Load<GameObject>(path);
-      return Object.Instantiate(prefab, at, Quaternion.identity);
     }
   }
 }
