@@ -1,0 +1,17 @@
+/.vs
+*.exe
+*.log
+*.bin
+*.apk
+/Library/
+/Temp/
+/Assets/VSCode*
+/obj/
+/.vscode/
+*sln
+*.useprefs
+*.csproj
+/.idea
+*.iml
+*.DotSettings.user
+/Assets/Plugins/Editor/JetBrains*
