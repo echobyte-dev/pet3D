@@ -23,7 +23,7 @@ namespace CodeBase.Infrastructure.States
     }
 
     private void EnterLoadLevel() => 
-      _stateMachine.Enter<LoadLevelState, string>("Level1");
+      _stateMachine.Enter<LoadProgressState>();
 
     public void Exit()
     {

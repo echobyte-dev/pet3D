@@ -1,4 +1,6 @@
 using CodeBase.Infrastructure.Factories;
+using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.Infrastructure.States;
 using CodeBase.UI;
 using UnityEngine;
@@ -11,16 +13,20 @@ namespace CodeBase.Infrastructure
     [SerializeField] private LoadingCurtain _curtain;
     private Game _game;
     private IGameFactory _gameFactory;
+    private IPersistentProgressService _progressService;
+    private ISaveLoadService _saveLoadService;
 
     [Inject]
-    public void Construct(IGameFactory gameFactory)
+    public void Construct(IGameFactory gameFactory, IPersistentProgressService progressService, ISaveLoadService saveLoadService)
     {
       _gameFactory = gameFactory;
+      _progressService = progressService;
+      _saveLoadService = saveLoadService;
     }
     
     private void Awake()
     {
-      _game = new Game(this, _curtain, _gameFactory);
+      _game = new Game(this, Instantiate(_curtain), _gameFactory, _progressService, _saveLoadService);
       _game.StateMachine.Enter<BootstrapState>();
 
       DontDestroyOnLoad(this);

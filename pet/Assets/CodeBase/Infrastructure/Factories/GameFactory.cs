@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using CodeBase.Data;
 using CodeBase.Infrastructure.AssetManagement;
 using UnityEngine;
 
@@ -7,12 +9,43 @@ namespace CodeBase.Infrastructure.Factories
   {
     private readonly IAssetProvider _assets;
     
+    public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
+    public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
+
     public GameFactory(IAssetProvider assets)
     {
       _assets = assets;
     }
 
-    public GameObject CreateSanta(GameObject at) =>
-      _assets.Instantiate(AssetPath.PlayerPath, at: at.transform.position);
+    public GameObject CreateSanta(GameObject at) => 
+      InstantiateRegistered(AssetPath.PlayerPath, at.transform.position);
+    
+    public void Cleanup()
+    {
+      ProgressReaders.Clear();
+      ProgressWriters.Clear();
+    }
+    
+    private GameObject InstantiateRegistered(string prefabPath, Vector3 at)
+    {
+      GameObject gameObject = _assets.Instantiate(prefabPath, at: at);
+
+      RegisterProgressWatchers(gameObject);
+      return gameObject;
+    }
+
+    private void Register(ISavedProgressReader progressReader)
+    {
+      if(progressReader is ISavedProgress progressWriter)
+        ProgressWriters.Add(progressWriter);
+
+      ProgressReaders.Add(progressReader);
+    }
+
+    private void RegisterProgressWatchers(GameObject gameObject)
+    {
+      foreach (ISavedProgressReader progressReader in gameObject.GetComponentsInChildren<ISavedProgressReader>())
+        Register(progressReader);
+    }
   }
 }
