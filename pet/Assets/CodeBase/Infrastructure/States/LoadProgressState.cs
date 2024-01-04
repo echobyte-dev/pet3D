@@ -35,7 +35,16 @@ namespace CodeBase.Infrastructure.States
         ?? NewProgress();
     }
 
-    private PlayerProgress NewProgress() => 
-      new(initialLevel: "Level1");
+    private PlayerProgress NewProgress()
+    {
+      var progress = new PlayerProgress("Level1");
+
+      progress.SantaState.MaxHP = 50;
+      progress.SantaStats.Damage = 1f;
+      progress.SantaStats.DamageRadius = 0.5f;
+      progress.SantaState.ResetHP();
+
+      return progress;
+    }
   }
 }

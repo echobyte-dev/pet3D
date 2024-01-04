@@ -28,7 +28,7 @@ namespace CodeBase.Infrastructure.States
       state.Enter();
     }
 
-    public void Enter<TState, TPayload>(TPayload payload) where TState : class, IPlayloadState<TPayload>
+    public void Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadState<TPayload>
     {
       TState state = ChangeState<TState>();
       state.Enter(payload);

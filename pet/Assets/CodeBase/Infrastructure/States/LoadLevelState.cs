@@ -1,12 +1,13 @@
 using CodeBase.Data;
 using CodeBase.Infrastructure.Factories;
 using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Santa;
 using CodeBase.UI;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.States
 {
-  public class LoadLevelState : IPlayloadState<string>
+  public class LoadLevelState : IPayloadState<string>
   {
     private const string InitialPointTag = "InitialPoint";
 
@@ -43,21 +44,31 @@ namespace CodeBase.Infrastructure.States
       _stateMachine.Enter<GameLoopState>();
     }
 
+    private void InitGameWorld()
+    {
+      GameObject santa = InitSanta();
+
+      InitHud(santa);
+      _stateMachine.Enter<GameLoopState>();
+      
+      CameraFollow(santa);
+    }
+
+    private void InitHud(GameObject santa)
+    {
+      GameObject hud = _gameFactory.CreateHud();
+      hud.GetComponentInChildren<ActorUI>().Construct(santa.GetComponent<SantaHealth>());
+    }
+
+    private GameObject InitSanta() => 
+      _gameFactory.CreateSanta(GameObject.FindWithTag(InitialPointTag));
+
     private void InformProgressReaders()
     {
       foreach (ISavedProgressReader progressReader in _gameFactory.ProgressReaders)
         progressReader.LoadProgress(_progressService.Progress);
     }
 
-    private void InitGameWorld()
-    {
-      GameObject santa = _gameFactory.CreateSanta(GameObject.FindWithTag(InitialPointTag));
-
-      _stateMachine.Enter<GameLoopState>();
-      
-      CameraFollow(santa);
-    }
-    
     private void CameraFollow(GameObject hero) =>
       Camera.main.GetComponent<CameraFollow>().Follow(hero);
   }
