@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using CodeBase.Infrastructure.Factories;
+using CodeBase.Infrastructure.Factory;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI;

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using CodeBase.Data;
 using CodeBase.Infrastructure.AssetManagement;
-using CodeBase.Infrastructure.Factories;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.Factory
@@ -54,9 +53,9 @@ namespace CodeBase.Infrastructure.Factory
       return gameObject;
     }
 
-    private void Register(ISavedProgressReader progressReader)
+    public void Register(ISavedProgressReader progressReader)
     {
-      if (progressReader is ISavedProgress progressWriter)
+      if(progressReader is ISavedProgress progressWriter)
         ProgressWriters.Add(progressWriter);
 
       ProgressReaders.Add(progressReader);

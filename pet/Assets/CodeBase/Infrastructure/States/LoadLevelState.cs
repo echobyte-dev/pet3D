@@ -1,6 +1,7 @@
 using CodeBase.Data;
-using CodeBase.Infrastructure.Factories;
+using CodeBase.Infrastructure.Factory;
 using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Logic;
 using CodeBase.Santa;
 using CodeBase.UI;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace CodeBase.Infrastructure.States
   public class LoadLevelState : IPayloadState<string>
   {
     private const string InitialPointTag = "InitialPoint";
+    private const string EnemySpawnerTag = "EnemySpawner";
 
     private readonly GameStateMachine _stateMachine;
     private readonly SceneLoader _sceneLoader;
@@ -46,12 +48,23 @@ namespace CodeBase.Infrastructure.States
 
     private void InitGameWorld()
     {
+      InitSpawners();
+      
       GameObject santa = InitSanta();
 
       InitHud(santa);
       _stateMachine.Enter<GameLoopState>();
       
       CameraFollow(santa);
+    }
+    
+    private void InitSpawners()
+    {
+      foreach (GameObject spawnerObject in GameObject.FindGameObjectsWithTag(EnemySpawnerTag))
+      {
+        var spawner = spawnerObject.GetComponent<EnemySpawner>();
+        _gameFactory.Register(spawner);
+      }
     }
 
     private void InitHud(GameObject santa)

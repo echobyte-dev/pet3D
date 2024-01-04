@@ -1,5 +1,5 @@
 using System.Linq;
-using CodeBase.Infrastructure.Factories;
+using CodeBase.Infrastructure.Factory;
 using CodeBase.Logic;
 using UnityEngine;
 using Zenject;
