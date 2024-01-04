@@ -40,7 +40,7 @@ namespace CodeBase.Infrastructure.States
       var progress = new PlayerProgress("Level1");
 
       progress.SantaState.MaxHP = 50;
-      progress.SantaStats.Damage = 1f;
+      progress.SantaStats.Damage = 10f;
       progress.SantaStats.DamageRadius = 0.5f;
       progress.SantaState.ResetHP();
 

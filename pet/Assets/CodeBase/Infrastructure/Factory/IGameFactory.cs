@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using CodeBase.Data;
+using CodeBase.StaticData;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.Factory
@@ -8,14 +8,11 @@ namespace CodeBase.Infrastructure.Factory
   public interface IGameFactory
   {
     GameObject CreateSanta(GameObject at);
-    GameObject SantaGameObject { get; set; }
-    event Action SantaCreated;
-    
+    GameObject CreateHud();
+    GameObject CreateMonster(MonsterTypeId typeId, Transform parent);
     List<ISavedProgressReader> ProgressReaders { get; }
     List<ISavedProgress> ProgressWriters { get; }
-
-    void Register(ISavedProgressReader savedProgress);
-    GameObject CreateHud();
     void Cleanup();
+    void Register(ISavedProgressReader savedProgress);
   }
 }

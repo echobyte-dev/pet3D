@@ -1,41 +1,24 @@
-using CodeBase.Infrastructure.Factory;
 using UnityEngine;
-using Zenject;
 
 namespace CodeBase.Enemy
 {
   public class RotateToSanta : Follow
   {
-    public float Speed;
+    [SerializeField] private float _speed;
 
-    private Transform _heroTransform;
-    private IGameFactory _gameFactory;
+    private Transform _playerTransform;
     private Vector3 _positionToLook;
 
-    [Inject]
-    public void Construct(IGameFactory gameFactory)
-    {
-      _gameFactory = gameFactory;
-    }
-
-    private void Start()
-    {
-      if (IsPlayerExist())
-        InitializePlayerTransform();
-      else
-        _gameFactory.SantaCreated += PlayerCreated;
-    }
-
+    public void Construct(Transform heroTransform)
+      => _playerTransform = heroTransform;
+    
     private void Update()
     {
-      if (IsInitialized())
-        RotateTowardsPlayer();
+      if (_playerTransform)
+        RotateTowardsHero();
     }
 
-    private bool IsPlayerExist() => 
-      _gameFactory.SantaGameObject != null;
-
-    private void RotateTowardsPlayer()
+    private void RotateTowardsHero()
     {
       UpdatePositionToLookAt();
 
@@ -44,10 +27,10 @@ namespace CodeBase.Enemy
 
     private void UpdatePositionToLookAt()
     {
-      Vector3 positionDelta = _heroTransform.position - transform.position;
+      Vector3 positionDelta = _playerTransform.position - transform.position;
       _positionToLook = new Vector3(positionDelta.x, transform.position.y, positionDelta.z);
     }
-
+    
     private Quaternion SmoothedRotation(Quaternion rotation, Vector3 positionToLook) =>
       Quaternion.Lerp(rotation, TargetRotation(positionToLook), SpeedFactor());
 
@@ -55,21 +38,6 @@ namespace CodeBase.Enemy
       Quaternion.LookRotation(position);
 
     private float SpeedFactor() =>
-      Speed * Time.deltaTime;
-
-    private bool IsInitialized() => 
-      _heroTransform != null;
-
-    private void PlayerCreated() =>
-      InitializePlayerTransform();
-
-    private void InitializePlayerTransform() =>
-      _heroTransform = _gameFactory.SantaGameObject.transform;
-
-    private void OnDestroy()
-    {
-      if(_gameFactory != null)
-        _gameFactory.SantaCreated -= PlayerCreated;
-    }
+      _speed * Time.deltaTime;
   }
 }

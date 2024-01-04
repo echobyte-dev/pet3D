@@ -1,47 +1,34 @@
-using CodeBase.Infrastructure.Factory;
 using UnityEngine;
 using UnityEngine.AI;
-using Zenject;
 
 namespace CodeBase.Enemy
 {
   public class AgentMoveToSanta : Follow
   {
-    private const float MinimalDistance = 1;
+    public NavMeshAgent Agent;
+    private Transform _santaTransform;
+    private const float _minimalDistance = 1;
 
-    [SerializeField] private NavMeshAgent _agent;
-    private Transform _playerTransform;
-    private IGameFactory _gameFactory;
-
-    [Inject]
-    public void Construct(IGameFactory gameFactory)
-    {
-      _gameFactory = gameFactory;
-
-      if (_gameFactory.SantaGameObject != null)
-        InitializeSantaTransform();
-      else
-      {
-        _gameFactory.SantaCreated += SantaCreated;
-      }
-    }
+    public void Construct(Transform heroTransform) =>
+      _santaTransform = heroTransform;
 
     private void Update()
     {
-      if (Initialized() && PlayerNotReached())
-        _agent.destination = _playerTransform.position;
+      SetDestinationForAgent();
     }
 
-    private bool Initialized() => 
-      _playerTransform != null;
+    private void SetDestinationForAgent()
+    {
+      if (HeroNotReached()) return;
+      Agent.destination = _santaTransform.position;
+    }
 
-    private void SantaCreated() => 
-      InitializeSantaTransform();
-
-    private void InitializeSantaTransform() => 
-      _playerTransform = _gameFactory.SantaGameObject.transform;
-
-    private bool PlayerNotReached() => 
-      Vector3.Distance(_agent.transform.position, _playerTransform.position) >= MinimalDistance;
+    private bool HeroNotReached()
+    {
+      if (Vector3.Distance(transform.position, _santaTransform.position) <= _minimalDistance) 
+        return true;
+      
+      return false;
+    }
   }
 }
