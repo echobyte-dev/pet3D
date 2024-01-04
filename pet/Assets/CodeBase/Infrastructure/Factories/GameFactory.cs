@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CodeBase.Data;
 using CodeBase.Infrastructure.AssetManagement;
@@ -11,15 +12,22 @@ namespace CodeBase.Infrastructure.Factories
     
     public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
     public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
+    public GameObject SantaGameObject { get; set; }
+
+    public event Action SantaCreated;
 
     public GameFactory(IAssetProvider assets)
     {
       _assets = assets;
     }
 
-    public GameObject CreateSanta(GameObject at) => 
-      InstantiateRegistered(AssetPath.PlayerPath, at.transform.position);
-    
+    public GameObject CreateSanta(GameObject at)
+    {
+      SantaGameObject = InstantiateRegistered(AssetPath.PlayerPath, at.transform.position);
+      SantaCreated?.Invoke();
+      return SantaGameObject;
+    }
+
     public void Cleanup()
     {
       ProgressReaders.Clear();

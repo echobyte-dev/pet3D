@@ -35,10 +35,7 @@ namespace CodeBase.Infrastructure.States
         ?? NewProgress();
     }
 
-    private PlayerProgress NewProgress()
-    {
-      return new PlayerProgress( "Level1");
-    }
-
+    private PlayerProgress NewProgress() => 
+      new(initialLevel: "Level1");
   }
 }
