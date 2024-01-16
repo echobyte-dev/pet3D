@@ -3,28 +3,21 @@ using CodeBase.Enemy;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.StaticData;
 using UnityEngine;
-using Zenject;
 
 namespace CodeBase.Logic.EnemySpawners
 {
-  public class EnemySpawner : MonoBehaviour, ISavedProgress
+  public class SpawnPoint : MonoBehaviour, ISavedProgress
   {
     public MonsterTypeId MonsterTypeId;
+    
+    public string Id { get; set; }
 
     private IGameFactory _gameFactory;
     private EnemyDeath _enemyDeath;
-
-    private string _id;
     private bool _slain;
-
-    [Inject]
-    public void Construct(IGameFactory gameFactory)
-    {
+    
+    public void Construct(IGameFactory gameFactory) => 
       _gameFactory = gameFactory;
-    }
-
-    private void Awake() =>
-      _id = GetComponent<UniqueId>().Id;
 
     private void OnDestroy()
     {
@@ -34,7 +27,7 @@ namespace CodeBase.Logic.EnemySpawners
 
     public void LoadProgress(PlayerProgress progress)
     {
-      if (progress.KillData.ClearedSpawners.Contains(_id))
+      if (progress.KillData.ClearedSpawners.Contains(Id))
         _slain = true;
       else
         Spawn();
@@ -43,7 +36,7 @@ namespace CodeBase.Logic.EnemySpawners
     public void UpdateProgress(PlayerProgress progress)
     {
       if (_slain)
-        progress.KillData.ClearedSpawners.Add(_id);
+        progress.KillData.ClearedSpawners.Add(Id);
     }
 
     private void Spawn()

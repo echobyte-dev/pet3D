@@ -5,6 +5,7 @@ using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.Randomizer;
 using CodeBase.Logic;
+using CodeBase.Logic.EnemySpawners;
 using CodeBase.StaticData;
 using CodeBase.UI;
 using UnityEngine;
@@ -34,11 +35,11 @@ namespace CodeBase.Infrastructure.Factory
     }
 
     public GameObject CreateSanta(GameObject at) =>
-      _santaGameObject = InstantiateRegistered(AssetPath.SantaPath, at.transform.position);
+      _santaGameObject = InstantiateRegistered(AssetPath.Santa, at.transform.position);
 
     public GameObject CreateHud()
     {
-      GameObject hud = InstantiateRegistered(AssetPath.HudPath);
+      GameObject hud = InstantiateRegistered(AssetPath.Hud);
 
       hud.GetComponentInChildren<LootCounter>()
         .Construct(_progressService.Progress.WorldData);
@@ -81,6 +82,16 @@ namespace CodeBase.Infrastructure.Factory
       lootPiece.Construct(_progressService.Progress.WorldData);
 
       return lootPiece;
+    }
+
+    public void CreateSpawner(Vector3 at, string spawnerId, MonsterTypeId monsterTypeId)
+    {
+      SpawnPoint spawner = InstantiateRegistered(AssetPath.Spawner, at)
+        .GetComponent<SpawnPoint>();
+
+      spawner.Construct(this);
+      spawner.Id = spawnerId;
+      spawner.MonsterTypeId = monsterTypeId;
     }
 
     public void Cleanup()

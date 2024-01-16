@@ -7,7 +7,7 @@ TagManager:
   - LoadingCurtain
   - InitialPoint
   - Santa
-  - EnemySpawner
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX

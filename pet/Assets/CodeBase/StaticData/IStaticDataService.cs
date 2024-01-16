@@ -2,7 +2,7 @@ namespace CodeBase.StaticData
 {
   public interface IStaticDataService
   {
-    void LoadMonsters();
     MonsterStaticData ForMonster(MonsterTypeId typeId);
+    LevelStaticData ForLevel(string sceneKey);
   }
 }
