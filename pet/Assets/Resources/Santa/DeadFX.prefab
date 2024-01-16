@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 420266}
   - component: {fileID: 19886758}
   - component: {fileID: 19954650}
+  - component: {fileID: 3286382582238647919}
   m_Layer: 0
   m_Name: DeadFX
   m_TagString: Untagged
@@ -4768,3 +4769,15 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &3286382582238647919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfae33f869247ff4cbeac87f9213cd98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -473,8 +473,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 861bff09106ce114fb6ae56bb0ad8e17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rotationAngleX: 10
-  _distance: 10
+  _rotationAngleX: 60
+  _distance: 2
   _offsetY: 5
 --- !u!1001 &1074007871
 PrefabInstance:

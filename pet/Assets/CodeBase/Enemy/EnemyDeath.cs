@@ -11,6 +11,7 @@ namespace CodeBase.Enemy
     [SerializeField] private EnemyAnimator _animator;
 
     [SerializeField] private GameObject _deathFx;
+    private Collider _collider;
 
     public event Action Happened;
 
