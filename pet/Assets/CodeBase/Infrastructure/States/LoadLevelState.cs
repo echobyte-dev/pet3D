@@ -1,11 +1,13 @@
 using CodeBase.Data;
-using CodeBase.Infrastructure.Factory;
+using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Logic;
 using CodeBase.Logic.EnemySpawners;
 using CodeBase.Santa;
 using CodeBase.StaticData;
 using CodeBase.UI;
+using CodeBase.UI.Elements;
+using CodeBase.UI.Services.Factory;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,7 +16,6 @@ namespace CodeBase.Infrastructure.States
   public class LoadLevelState : IPayloadState<string>
   {
     private const string InitialPointTag = "InitialPoint";
-    private const string EnemySpawnerTag = "EnemySpawner";
 
     private readonly GameStateMachine _stateMachine;
     private readonly SceneLoader _sceneLoader;
@@ -22,9 +23,10 @@ namespace CodeBase.Infrastructure.States
     private readonly IGameFactory _gameFactory;
     private readonly IPersistentProgressService _progressService;
     private readonly IStaticDataService _staticData;
+    private readonly IUIFactory _uiFactory;
 
     public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingCurtain curtain,
-      IGameFactory gameFactory, IPersistentProgressService progressService, IStaticDataService staticData)
+      IGameFactory gameFactory, IPersistentProgressService progressService, IStaticDataService staticData, IUIFactory uiFactory)
     {
       _stateMachine = stateMachine;
       _sceneLoader = sceneLoader;
@@ -32,6 +34,7 @@ namespace CodeBase.Infrastructure.States
       _gameFactory = gameFactory;
       _progressService = progressService;
       _staticData = staticData;
+      _uiFactory = uiFactory;
     }
 
     public void Enter(string sceneName)
@@ -46,6 +49,7 @@ namespace CodeBase.Infrastructure.States
 
     private void OnLoaded()
     {
+      InitUIRoot();
       InitGameWorld();
       InformProgressReaders();
 
@@ -82,6 +86,9 @@ namespace CodeBase.Infrastructure.States
 
     private GameObject InitSanta() =>
       _gameFactory.CreateSanta(GameObject.FindWithTag(InitialPointTag));
+
+    private void InitUIRoot() => 
+      _uiFactory.CreateUIRoot();
 
     private void InformProgressReaders()
     {

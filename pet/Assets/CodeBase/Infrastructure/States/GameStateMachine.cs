@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
-using CodeBase.Infrastructure.Factory;
+using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.StaticData;
 using CodeBase.UI;
+using CodeBase.UI.Elements;
+using CodeBase.UI.Services.Factory;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -14,12 +16,13 @@ namespace CodeBase.Infrastructure.States
     private IExitableState _activeState;
 
     public GameStateMachine(SceneLoader sceneLoader, LoadingCurtain curtain, IGameFactory gameFactory,
-      IPersistentProgressService progressService, ISaveLoadService saveLoadService, IStaticDataService staticData)
+      IPersistentProgressService progressService, ISaveLoadService saveLoadService, IStaticDataService staticData,
+      IUIFactory uiFactory)
     {
       _states = new Dictionary<Type, IExitableState>()
       {
-        [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader),
-        [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, curtain, gameFactory, progressService, staticData),
+        [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, staticData),
+        [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, curtain, gameFactory, progressService, staticData, uiFactory),
         [typeof(LoadProgressState)] = new LoadProgressState(this, progressService, saveLoadService),
         [typeof(GameLoopState)] = new GameLoopState(this)
       };

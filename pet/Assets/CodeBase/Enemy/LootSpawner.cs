@@ -1,5 +1,5 @@
 using CodeBase.Data.Loot;
-using CodeBase.Infrastructure.Factory;
+using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.Randomizer;
 using UnityEngine;
 

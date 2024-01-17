@@ -4,7 +4,7 @@ using CodeBase.Enemy;
 using CodeBase.StaticData;
 using UnityEngine;
 
-namespace CodeBase.Infrastructure.Factory
+namespace CodeBase.Infrastructure.Services.Factory
 {
   public interface IGameFactory
   {

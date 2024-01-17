@@ -1,4 +1,5 @@
 using CodeBase.Infrastructure.Services;
+using CodeBase.StaticData;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -9,11 +10,14 @@ namespace CodeBase.Infrastructure.States
     
     private readonly GameStateMachine _stateMachine;
     private readonly SceneLoader _sceneLoader;
+    private readonly IStaticDataService _staticData;
 
-    public BootstrapState(GameStateMachine stateMachine, SceneLoader sceneLoader)
+
+    public BootstrapState(GameStateMachine stateMachine, SceneLoader sceneLoader, IStaticDataService staticData)
     {
       _stateMachine = stateMachine;
       _sceneLoader = sceneLoader;
+      _staticData = staticData;
     }
 
     public void Enter()
@@ -29,9 +33,10 @@ namespace CodeBase.Infrastructure.States
     {
     }
 
-    private static void RegisterServices()
+    private void RegisterServices()
     {
       InputService = RegisterInputService();
+      _staticData.Load();
     }
 
     private static IInputService RegisterInputService() =>

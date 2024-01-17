@@ -7,31 +7,34 @@ using CodeBase.Infrastructure.Services.Randomizer;
 using CodeBase.Logic;
 using CodeBase.Logic.EnemySpawners;
 using CodeBase.StaticData;
-using CodeBase.UI;
+using CodeBase.UI.Elements;
+using CodeBase.UI.Services.Windows;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace CodeBase.Infrastructure.Factory
+namespace CodeBase.Infrastructure.Services.Factory
 {
   public class GameFactory : IGameFactory
   {
-    private readonly IAssetProvider _assets;
+    private readonly IAssetsProvider _assetsProvider;
     private readonly IStaticDataService _staticData;
-    private IPersistentProgressService _progressService;
-    private IRandomService _randomService;
+    private readonly IPersistentProgressService _progressService;
+    private readonly IRandomService _randomService;
+    private readonly IWindowService _windowService;
 
     private GameObject _santaGameObject;
 
     public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
     public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
 
-    public GameFactory(IAssetProvider assets, IStaticDataService staticData, IRandomService randomService,
-      IPersistentProgressService progressService)
+    public GameFactory(IAssetsProvider assetsProvider, IStaticDataService staticData, IRandomService randomService,
+      IPersistentProgressService progressService, IWindowService windowService)
     {
-      _assets = assets;
+      _assetsProvider = assetsProvider;
       _staticData = staticData;
       _randomService = randomService;
       _progressService = progressService;
+      _windowService = windowService;
     }
 
     public GameObject CreateSanta(GameObject at) =>
@@ -43,6 +46,9 @@ namespace CodeBase.Infrastructure.Factory
 
       hud.GetComponentInChildren<LootCounter>()
         .Construct(_progressService.Progress.WorldData);
+
+      foreach (OpenWindowButton openWindowButton in hud.GetComponentsInChildren<OpenWindowButton>())
+        openWindowButton.Construct(_windowService);
 
       return hud;
     }
@@ -110,7 +116,7 @@ namespace CodeBase.Infrastructure.Factory
 
     private GameObject InstantiateRegistered(string prefabPath, Vector3 at)
     {
-      GameObject gameObject = _assets.Instantiate(path: prefabPath, at: at);
+      GameObject gameObject = _assetsProvider.Instantiate(path: prefabPath, at: at);
       RegisterProgressWatchers(gameObject);
 
       return gameObject;
@@ -118,7 +124,7 @@ namespace CodeBase.Infrastructure.Factory
 
     private GameObject InstantiateRegistered(string prefabPath)
     {
-      GameObject gameObject = _assets.Instantiate(path: prefabPath);
+      GameObject gameObject = _assetsProvider.Instantiate(path: prefabPath);
       RegisterProgressWatchers(gameObject);
 
       return gameObject;

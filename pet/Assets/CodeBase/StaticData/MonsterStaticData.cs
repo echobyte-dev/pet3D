@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CodeBase.StaticData
 {
-  [CreateAssetMenu(fileName = "MonsterData", menuName = "Static Data/Monster")]
+  [CreateAssetMenu(fileName = "MonsterData", menuName = "StaticData/Monster")]
   public class MonsterStaticData : ScriptableObject
   {
     public MonsterTypeId MonsterTypeId;

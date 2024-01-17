@@ -9,6 +9,8 @@ namespace CodeBase.Santa
   [RequireComponent(typeof(CharacterController))]
   public class SantaMove : MonoBehaviour, ISavedProgress
   {
+    private const float _epsilon = 0.001f;
+    
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private float _movementSpeed;
 
@@ -37,7 +39,7 @@ namespace CodeBase.Santa
     {
       Vector3 movementVector = Vector3.zero;
 
-      if (_inputService.Axis.sqrMagnitude > Constants.Epsilon)
+      if (_inputService.Axis.sqrMagnitude > _epsilon)
       {
         movementVector = Camera.main.transform.TransformDirection(_inputService.Axis);
         movementVector.y = 0;
