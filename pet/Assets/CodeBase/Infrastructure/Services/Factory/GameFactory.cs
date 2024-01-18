@@ -37,8 +37,8 @@ namespace CodeBase.Infrastructure.Services.Factory
       _windowService = windowService;
     }
 
-    public GameObject CreateSanta(GameObject at) =>
-      _santaGameObject = InstantiateRegistered(AssetPath.Santa, at.transform.position);
+    public GameObject CreateSanta(Vector3 at) =>
+      _santaGameObject = InstantiateRegistered(AssetPath.Santa, at);
 
     public GameObject CreateHud()
     {

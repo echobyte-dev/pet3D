@@ -1,11 +1,8 @@
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.PersistentProgress;
-using CodeBase.Logic;
-using CodeBase.Logic.EnemySpawners;
 using CodeBase.Santa;
 using CodeBase.StaticData;
-using CodeBase.UI;
 using CodeBase.UI.Elements;
 using CodeBase.UI.Services.Factory;
 using UnityEngine;
@@ -15,8 +12,6 @@ namespace CodeBase.Infrastructure.States
 {
   public class LoadLevelState : IPayloadState<string>
   {
-    private const string InitialPointTag = "InitialPoint";
-
     private readonly GameStateMachine _stateMachine;
     private readonly SceneLoader _sceneLoader;
     private readonly LoadingCurtain _curtain;
@@ -58,34 +53,26 @@ namespace CodeBase.Infrastructure.States
 
     private void InitGameWorld()
     {
-      InitSpawners();
+      LevelStaticData levelData = LevelStaticData();
 
-      GameObject santa = InitSanta();
-
+      InitSpawners(levelData);
+      GameObject santa = InitSanta(levelData);
       InitHud(santa);
-      _stateMachine.Enter<GameLoopState>();
-
       CameraFollow(santa);
+      _stateMachine.Enter<GameLoopState>();
     }
 
-    private void InitSpawners()
+    private void InitSpawners(LevelStaticData levelData)
     {
-      string sceneKey = SceneManager.GetActiveScene().name;
-      LevelStaticData levelData = _staticData.ForLevel(sceneKey);
-      foreach (EnemySpawnerStaticData spawnerData in levelData.EnemySpawners)
-      {
+      foreach (EnemySpawnerStaticData spawnerData in levelData.EnemySpawners) 
         _gameFactory.CreateSpawner(spawnerData.Position, spawnerData.Id, spawnerData.MonsterTypeId);
-      }
     }
 
-    private void InitHud(GameObject santa)
-    {
-      GameObject hud = _gameFactory.CreateHud();
-      hud.GetComponentInChildren<ActorUI>().Construct(santa.GetComponent<SantaHealth>());
-    }
+    private void InitHud(GameObject santa) => 
+      _gameFactory.CreateHud().GetComponentInChildren<ActorUI>().Construct(santa.GetComponent<SantaHealth>());
 
-    private GameObject InitSanta() =>
-      _gameFactory.CreateSanta(GameObject.FindWithTag(InitialPointTag));
+    private GameObject InitSanta(LevelStaticData levelData) => 
+      _gameFactory.CreateSanta(levelData.InitialSantaPosition);
 
     private void InitUIRoot() => 
       _uiFactory.CreateUIRoot();
@@ -95,6 +82,9 @@ namespace CodeBase.Infrastructure.States
       foreach (ISavedProgressReader progressReader in _gameFactory.ProgressReaders)
         progressReader.LoadProgress(_progressService.Progress);
     }
+
+    private LevelStaticData LevelStaticData() => 
+      _staticData.ForLevel(SceneManager.GetActiveScene().name);
 
     private void CameraFollow(GameObject hero) =>
       Camera.main.GetComponent<CameraFollow>().Follow(hero);
