@@ -1,3 +1,4 @@
+using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
@@ -15,10 +16,10 @@ namespace CodeBase.Infrastructure
 
     public Game(ICoroutineRunner coroutineRunner, LoadingCurtain curtain, IGameFactory gameFactory,
       IPersistentProgressService progressService, ISaveLoadService saveLoadService,
-      IStaticDataService staticDataService, IUIFactory uiFactory)
+      IStaticDataService staticDataService, IUIFactory uiFactory, IAssetProvider assetProvider)
     {
       StateMachine = new GameStateMachine(new SceneLoader(coroutineRunner), curtain, gameFactory, progressService,
-        saveLoadService, staticDataService, uiFactory);
+        saveLoadService, staticDataService, uiFactory, assetProvider);
     }
   }
 }

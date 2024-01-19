@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CodeBase.Data;
 using CodeBase.Enemy;
 using CodeBase.StaticData;
@@ -8,15 +9,16 @@ namespace CodeBase.Infrastructure.Services.Factory
 {
   public interface IGameFactory
   {
-    GameObject CreateSanta(Vector3 at);
-    GameObject CreateHud();
-    GameObject CreateMonster(MonsterTypeId typeId, Transform parent);
-    LootPiece CreateLoot();
+    Task<GameObject> CreateSanta(Vector3 at);
+    Task<GameObject> CreateHud();
+    Task<GameObject> CreateMonster(MonsterTypeId typeId, Transform parent);
+    Task<LootPiece> CreateLoot();
     
-    void CreateSpawner(Vector3 at, string spawnerId, MonsterTypeId monsterTypeId);
+    Task CreateSpawner(Vector3 at, string spawnerId, MonsterTypeId monsterTypeId);
     void Cleanup();
     
     List<ISavedProgressReader> ProgressReaders { get; }
     List<ISavedProgress> ProgressWriters { get; }
+    Task WarmUp();
   }
 }

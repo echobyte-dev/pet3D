@@ -27,7 +27,7 @@ namespace CodeBase.Infrastructure.Installers
       
       Container.Bind<IRandomService>().To<RandomService>().AsSingle();
       
-      Container.Bind<IAssetsProvider>().To<AssetsProvider>().AsSingle();
+      Container.Bind<IAssetProvider>().To<AssetProvider>().AsSingle();
       Container.Bind<IGameFactory>().To<GameFactory>().AsSingle();
     }
   }

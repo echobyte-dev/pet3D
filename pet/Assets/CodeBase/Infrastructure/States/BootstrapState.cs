@@ -1,3 +1,4 @@
+using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Infrastructure.Services;
 using CodeBase.StaticData;
 
@@ -11,13 +12,14 @@ namespace CodeBase.Infrastructure.States
     private readonly GameStateMachine _stateMachine;
     private readonly SceneLoader _sceneLoader;
     private readonly IStaticDataService _staticData;
+    private readonly IAssetProvider _assetProvider;
 
-
-    public BootstrapState(GameStateMachine stateMachine, SceneLoader sceneLoader, IStaticDataService staticData)
+    public BootstrapState(GameStateMachine stateMachine, SceneLoader sceneLoader, IStaticDataService staticData, IAssetProvider assetProvider)
     {
       _stateMachine = stateMachine;
       _sceneLoader = sceneLoader;
       _staticData = staticData;
+      _assetProvider = assetProvider;
     }
 
     public void Enter()
@@ -37,6 +39,7 @@ namespace CodeBase.Infrastructure.States
     {
       InputService = RegisterInputService();
       _staticData.Load();
+      _assetProvider.Initialize();
     }
 
     private static IInputService RegisterInputService() =>

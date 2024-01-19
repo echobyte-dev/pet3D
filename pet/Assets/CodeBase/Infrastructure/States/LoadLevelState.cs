@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.PersistentProgress;
@@ -36,46 +37,51 @@ namespace CodeBase.Infrastructure.States
     {
       _curtain.Show();
       _gameFactory.Cleanup();
+      _gameFactory.WarmUp();
       _sceneLoader.Load(sceneName, OnLoaded);
     }
 
     public void Exit() =>
       _curtain.Hide();
 
-    private void OnLoaded()
+    private async void OnLoaded()
     {
-      InitUIRoot();
-      InitGameWorld();
+      await InitUIRoot();
+      await InitGameWorld();
       InformProgressReaders();
 
       _stateMachine.Enter<GameLoopState>();
     }
 
-    private void InitGameWorld()
+    private async Task InitGameWorld()
     {
       LevelStaticData levelData = LevelStaticData();
 
-      InitSpawners(levelData);
-      GameObject santa = InitSanta(levelData);
-      InitHud(santa);
+      await InitSpawners(levelData);
+      GameObject santa = await InitSanta(levelData);
+      await InitHud(santa);
+      
       CameraFollow(santa);
-      _stateMachine.Enter<GameLoopState>();
     }
 
-    private void InitSpawners(LevelStaticData levelData)
+    private async Task InitSpawners(LevelStaticData levelData)
     {
       foreach (EnemySpawnerStaticData spawnerData in levelData.EnemySpawners) 
         _gameFactory.CreateSpawner(spawnerData.Position, spawnerData.Id, spawnerData.MonsterTypeId);
     }
 
-    private void InitHud(GameObject santa) => 
-      _gameFactory.CreateHud().GetComponentInChildren<ActorUI>().Construct(santa.GetComponent<SantaHealth>());
+    private async Task<GameObject> InitSanta(LevelStaticData levelData) => 
+      await _gameFactory.CreateSanta(levelData.InitialSantaPosition);
 
-    private GameObject InitSanta(LevelStaticData levelData) => 
-      _gameFactory.CreateSanta(levelData.InitialSantaPosition);
+    private async Task InitHud(GameObject santa)
+    {
+      GameObject hud = await _gameFactory.CreateHud();
+      
+      hud.GetComponentInChildren<ActorUI>().Construct(santa.GetComponent<SantaHealth>());
+    }
 
-    private void InitUIRoot() => 
-      _uiFactory.CreateUIRoot();
+    private async Task InitUIRoot() => 
+      await _uiFactory.CreateUIRoot();
 
     private void InformProgressReaders()
     {

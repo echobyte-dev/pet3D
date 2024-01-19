@@ -1,3 +1,4 @@
+using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Infrastructure.Services.Factory;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
@@ -19,22 +20,24 @@ namespace CodeBase.Infrastructure
     private ISaveLoadService _saveLoadService;
     private IStaticDataService _staticDataService;
     private IUIFactory _uiFactory;
+    private IAssetProvider _assetProvider;
 
     [Inject]
     public void Construct(IGameFactory gameFactory, IPersistentProgressService progressService,
       ISaveLoadService saveLoadService, IStaticDataService staticDataService,
-      IUIFactory uiFactory)
+      IUIFactory uiFactory, IAssetProvider assetProvider)
     {
       _gameFactory = gameFactory;
       _progressService = progressService;
       _saveLoadService = saveLoadService;
       _staticDataService = staticDataService;
       _uiFactory = uiFactory;
+      _assetProvider = assetProvider;
     }
 
     private void Awake()
     {
-      _game = new Game(this, Instantiate(_curtain), _gameFactory, _progressService, _saveLoadService, _staticDataService, _uiFactory);
+      _game = new Game(this, Instantiate(_curtain), _gameFactory, _progressService, _saveLoadService, _staticDataService, _uiFactory, _assetProvider);
       _game.StateMachine.Enter<BootstrapState>();
 
       DontDestroyOnLoad(this);

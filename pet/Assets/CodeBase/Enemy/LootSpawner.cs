@@ -24,9 +24,9 @@ namespace CodeBase.Enemy
       _enemyDeath.Happened += SpawnLoot;
     }
 
-    private void SpawnLoot()
+    private async void SpawnLoot()
     {
-      LootPiece loot = _gameFactory.CreateLoot();
+      LootPiece loot = await _gameFactory.CreateLoot();
       loot.transform.position = transform.position;
 
       var lootItem = GenerateLoot();
